@@ -25,5 +25,15 @@
   register: elasticsearch_install_from_package
 
 # ansible uri module requires python-httplib2
-- name: python-httplib2
-  pip: name=httplib2
+- name: Check python-httplib2 present
+  command: python -c "import httplib2"
+  register: httplib2_check
+  failed_when: httplib2_check.rc not in [0, 1]
+
+- block:
+    - name: install epel
+      yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ansible_distribution_major_version}}.noarch.rpm
+
+    - name: python-httplib2
+      yum: name=python-httplib2
+  when: httplib2_check.rc == 1
