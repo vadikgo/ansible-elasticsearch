@@ -26,7 +26,7 @@
 
 # ansible uri module requires python-httplib2
 - name: Check python-httplib2 present
-  command: python -c "import httplib2"
+  command: "{{ansible_python.executable}} -c 'import httplib2'"
   register: httplib2_check
   failed_when: httplib2_check.rc not in [0, 1]
 
